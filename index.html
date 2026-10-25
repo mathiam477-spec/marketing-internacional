@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketing Internacional - Plataforma de Estudio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .tab-active {
+            background-color: #e0e7ff;
+            color: #4338ca;
+            font-weight: 600;
+            border-left: 4px solid #4338ca;
+        }
+        .tab-inactive {
+            color: #4b5563;
+            border-left: 4px solid transparent;
+        }
+        .tab-inactive:hover {
+            background-color: #f3f4f6;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c7c7cc; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
+    </style>
+</head>
+<body class="text-gray-800 h-screen flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <header class="bg-indigo-600 text-white shadow-md z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                    <span class="font-bold text-xl tracking-tight">MKT Int. Académie</span>
+                </div>
+                <nav class="flex gap-4">
+                    <button onclick="switchMainTab('courses')" id="btn-courses" class="px-3 py-2 rounded-md text-sm font-medium bg-indigo-700 hover:bg-indigo-500 transition">Cursos</button>
+                    <button onclick="switchMainTab('training')" id="btn-training" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-500 transition">Entrenamiento</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="flex-1 flex overflow-hidden max-w-7xl w-full mx-auto bg-white shadow-xl my-4 rounded-xl">
+        
+        <!-- SECTION: COURSES -->
+        <div id="section-courses" class="w-full flex h-full">
+            <!-- Sidebar -->
+            <div class="w-1/3 md:w-1/4 bg-gray-50 border-r border-gray-200 overflow-y-auto">
+                <div class="p-4 border-b border-gray-200">
+                    <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Módulos de Estudio</h2>
+                </div>
+                <nav class="flex flex-col" id="module-tabs">
+                    <button onclick="loadModule(1)" id="tab-mod-1" class="text-left px-4 py-3 tab-active transition">1. Producto e Innovación</button>
+                    <button onclick="loadModule(2)" id="tab-mod-2" class="text-left px-4 py-3 tab-inactive transition">2. Estrategias de Precios</button>
+                    <button onclick="loadModule(3)" id="tab-mod-3" class="text-left px-4 py-3 tab-inactive transition">3. Promoción y Cultura</button>
+                    <button onclick="loadModule(4)" id="tab-mod-4" class="text-left px-4 py-3 tab-inactive transition">4. Método Carga de Trabajo</button>
+                    <button onclick="loadModule(5)" id="tab-mod-5" class="text-left px-4 py-3 tab-inactive transition">5. Logística y Distribución</button>
+                </nav>
+            </div>
+            <!-- Content -->
+            <div class="w-2/3 md:w-3/4 p-8 overflow-y-auto" id="course-content">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+
+        <!-- SECTION: TRAINING -->
+        <div id="section-training" class="w-full h-full hidden flex-col">
+            <div class="flex border-b border-gray-200 bg-gray-50 p-2 gap-2 justify-center">
+                <button onclick="switchTrainTab('quiz')" id="btn-quiz" class="px-6 py-2 rounded-lg bg-indigo-100 text-indigo-700 font-semibold shadow-sm">Test de Conocimientos</button>
+                <button onclick="switchTrainTab('calc')" id="btn-calc" class="px-6 py-2 rounded-lg text-gray-600 hover:bg-gray-200 font-medium">Simulador Carga de Trabajo</button>
+            </div>
+            
+            <!-- Quiz Area -->
+            <div id="area-quiz" class="flex-1 p-8 overflow-y-auto">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800">Cuestionario de Preparación</h2>
+                <div id="quiz-container" class="space-y-6">
+                    <!-- Quiz injected via JS -->
+                </div>
+                <button onclick="checkAnswers()" class="mt-8 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition w-full sm:w-auto">Corregir mis respuestas</button>
+            </div>
+
+            <!-- Calculator Area -->
+            <div id="area-calc" class="flex-1 p-8 overflow-y-auto hidden">
+                <h2 class="text-2xl font-bold mb-2 text-gray-800">Simulador: Método Carga de Trabajo</h2>
+                <p class="text-gray-600 mb-6">Usa esta calculadora para practicar la lógica del método visto en clase. Convierte todo a horas anuales.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Configuración del Vendedor -->
+                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-lg mb-4 text-indigo-800">1. Capacidad del Vendedor</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Horas trabajadas al año (ej. 1920)</label>
+                                <input type="number" id="calc-horas-año" value="1920" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">% de tiempo NO dedicado a ventas (Viajes, reportes)</label>
+                                <div class="relative mt-1 rounded-md shadow-sm">
+                                    <input type="number" id="calc-porcentaje-noventa" value="60" class="block w-full rounded-md border-gray-300 p-2 border focus:ring-indigo-500 focus:border-indigo-500">
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500">%</div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Si dedica 40% a vender, ingresa 60% aquí.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clientes -->
+                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-lg mb-4 text-indigo-800">2. Carga de Clientes</h3>
+                        <div class="space-y-4">
+                            <!-- Tipo A -->
+                            <div class="grid grid-cols-3 gap-2">
+                                <div><label class="text-xs font-semibold text-gray-600">Cant. Clientes A</label><input type="number" id="cli-a-cant" value="100" class="w-full border p-1 rounded"></div>
+                                <div><label class="text-xs font-semibold text-gray-600">Visitas/Año</label><input type="number" id="cli-a-frec" value="24" class="w-full border p-1 rounded"></div>
+                                <div><label class="text-xs font-semibold text-gray-600">Duración (Horas)</label><input type="number" id="cli-a-dur" value="1" step="0.1" class="w-full border p-1 rounded"></div>
+                            </div>
+                            <!-- Tipo B -->
+                            <div class="grid grid-cols-3 gap-2">
+                                <div><label class="text-xs font-semibold text-gray-600">Cant. Clientes B</label><input type="number" id="cli-b-cant" value="200" class="w-full border p-1 rounded"></div>
+                                <div><label class="text-xs font-semibold text-gray-600">Visitas/Año</label><input type="number" id="cli-b-frec" value="12" class="w-full border p-1 rounded"></div>
+                                <div><label class="text-xs font-semibold text-gray-600">Duración (Horas)</label><input type="number" id="cli-b-dur" value="0.5" step="0.1" class="w-full border p-1 rounded"></div>
+                            </div>
+                            <!-- Tipo C -->
+                            <div class="grid grid-cols-3 gap-2">
+                                <div><label class="text-xs font-semibold text-gray-600">Cant. Clientes C</label><input type="number" id="cli-c-cant" value="300" class="w-full border p-1 rounded"></div>
+                                <div><label class="text-xs font-semibold text-gray-600">Visitas/Año</label><input type="number" id="cli-c-frec" value="6" class="w-full border p-1 rounded"></div>
+                                <div><label class="text-xs font-semibold text-gray-600">Duración (Horas)</label><input type="number" id="cli-c-dur" value="0.33" step="0.01" class="w-full border p-1 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-center">
+                    <button onclick="calcularCargaTrabajo()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transition text-lg">Calcular Fuerza de Ventas</button>
+                </div>
+
+                <!-- Resultados -->
+                <div id="calc-results" class="mt-8 p-6 bg-indigo-50 rounded-xl border border-indigo-200 hidden">
+                    <h3 class="text-xl font-bold text-indigo-900 mb-4">Resultados</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div class="bg-white p-4 rounded-lg shadow-sm">
+                            <p class="text-sm text-gray-500">Horas de venta por vendedor</p>
+                            <p id="res-horas-vendedor" class="text-2xl font-bold text-indigo-600">-</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm">
+                            <p class="text-sm text-gray-500">Carga total requerida (Horas)</p>
+                            <p id="res-carga-total" class="text-2xl font-bold text-indigo-600">-</p>
+                        </div>
+                        <div class="bg-indigo-600 p-4 rounded-lg shadow-md text-white">
+                            <p class="text-sm text-indigo-100">Vendedores Necesarios</p>
+                            <p id="res-vendedores" class="text-3xl font-extrabold">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Message Box (Replaces alert) -->
+    <div id="message-box" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden z-50 transition-opacity">
+        <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 transform scale-95 transition-transform" id="message-box-content">
+            <h3 id="msg-title" class="text-xl font-bold text-gray-900 mb-2">Mensaje</h3>
+            <p id="msg-text" class="text-gray-600 mb-6">Texto del mensaje.</p>
+            <button onclick="closeMessageBox()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg">Entendido</button>
+        </div>
+    </div>
+
+    <script>
+        // --- CONTENT DATA ---
+        const modules = {
+            1: {
+                title: "1. Estrategias de Producto",
+                content: `
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold text-indigo-700">Ciclo de Vida Global del Producto (GPLC)</h3>
+                        <p>Los productos no están en la misma etapa en todo el mundo. Las multinacionales usan <strong>lanzamientos escalonados</strong>: un producto maduro en EE. UU. puede estar en introducción en India.</p>
+                        
+                        <h3 class="text-xl font-bold text-indigo-700 mt-6">Extensión del Ciclo de Vida</h3>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li><strong>Nuevos mercados:</strong> Reintroducir productos en mercados emergentes (Ej. Nokia con teléfonos básicos en India).</li>
+                            <li><strong>Nostalgia y Rediseño:</strong> Modificar el empaque para revitalizar ventas (Ej. Coca-Cola retro en Europa).</li>
+                        </ul>
+
+                        <h3 class="text-xl font-bold text-indigo-700 mt-6">4 Tipos de Innovación Global</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+                            <div class="bg-indigo-50 p-4 rounded-lg"><span class="font-bold">1. Producto:</span> Nuevos diseños o materiales.</div>
+                            <div class="bg-indigo-50 p-4 rounded-lg"><span class="font-bold">2. Procesos:</span> Eficiencia operativa (Ej. Zara logística rápida).</div>
+                            <div class="bg-indigo-50 p-4 rounded-lg"><span class="font-bold">3. Posicionamiento:</span> Cambiar la percepción (Ej. Red Bull en Asia).</div>
+                            <div class="bg-indigo-50 p-4 rounded-lg"><span class="font-bold">4. Paradigmática:</span> Cambiar el modelo de negocio (Ej. Airbnb).</div>
+                        </div>
+                    </div>
+                `
+            },
+            2: {
+                title: "2. Estrategias de Precios",
+                content: `
+                    <div class="space-y-4">
+                        <p class="text-gray-700">La fijación de precios debe equilibrar ganancias con realidades locales (inflación, aranceles, tipo de cambio).</p>
+                        
+                        <h3 class="text-xl font-bold text-indigo-700 mt-6">Concepto Clave: Dumping</h3>
+                        <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+                            <p class="text-red-700">Vender en el extranjero a un precio inferior al mercado interno o por debajo del costo de producción. Sirve para penetrar rápido, pero conlleva <strong>alto riesgo de sanciones legales y aranceles</strong>.</p>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-indigo-700 mt-6">Precios Uniformes vs. Diferenciales</h3>
+                        <table class="min-w-full bg-white border border-gray-200 mt-2 rounded-lg overflow-hidden shadow-sm">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="py-3 px-4 text-left font-semibold text-gray-700">Precios Uniformes</th>
+                                    <th class="py-3 px-4 text-left font-semibold text-gray-700">Precios Diferenciales</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-t">
+                                    <td class="py-3 px-4">Mismo precio en todo el mundo.</td>
+                                    <td class="py-3 px-4">Precio adaptado a cada país.</td>
+                                </tr>
+                                <tr class="border-t">
+                                    <td class="py-3 px-4">Protege el posicionamiento premium (Ej. Apple, Rolex).</td>
+                                    <td class="py-3 px-4">Maximiza ingresos según el poder adquisitivo (Ej. Netflix en India).</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `
+            },
+            3: {
+                title: "3. Promoción y Comunicación",
+                content: `
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold text-indigo-700">Modelo Iceberg de la Cultura</h3>
+                        <p>La cultura profunda (valores, tabúes, semiótica) influye en cómo se interpreta un anuncio. Cuidado con los colores (Ej. Azul claro de Pepsi = luto en partes de Asia).</p>
+
+                        <h3 class="text-xl font-bold text-indigo-700 mt-6">Alto Contexto vs. Bajo Contexto</h3>
+                        <div class="flex flex-col md:flex-row gap-4 mt-2">
+                            <div class="flex-1 bg-blue-50 p-4 rounded-lg border border-blue-200">
+                                <h4 class="font-bold text-blue-800">Alto Contexto (Japón, LatAm)</h4>
+                                <p class="text-sm mt-2">Mensajes suaves, implícitos. Importancia del simbolismo, las emociones y la relación a largo plazo.</p>
+                            </div>
+                            <div class="flex-1 bg-green-50 p-4 rounded-lg border border-green-200">
+                                <h4 class="font-bold text-green-800">Bajo Contexto (EE. UU., Alemania)</h4>
+                                <p class="text-sm mt-2">Mensajes directos, explícitos, claros y orientados a los beneficios concretos del producto.</p>
+                            </div>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-indigo-700 mt-6">Canales y Microinfluencers</h3>
+                        <p>Aplica <strong>IMC (Comunicaciones Integradas de Marketing)</strong> para dar un mensaje coherente en medios tradicionales y digitales. Usa <em>microinfluencers</em> para generar mayor confianza en nichos culturales locales.</p>
+                    </div>
+                `
+            },
+            4: {
+                title: "4. Ventas: Método de Carga de Trabajo",
+                content: `
+                    <div class="space-y-4">
+                        <p class="text-gray-700">A diferencia del método de desglose (que asume que todo es igual), este método calcula matemáticamente el tamaño de la fuerza de ventas basándose en el esfuerzo real requerido.</p>
+                        
+                        <div class="bg-indigo-50 p-5 rounded-xl border border-indigo-100 mt-4">
+                            <h4 class="font-bold text-indigo-900 mb-4">Los 5 Pasos del Cálculo:</h4>
+                            <ol class="list-decimal pl-5 space-y-3 text-indigo-800">
+                                <li><strong>Clasificar:</strong> Agrupar clientes (Grandes, Medianos, Pequeños).</li>
+                                <li><strong>Tiempos y Frecuencias:</strong> Cuánto dura una visita y cuántas al año. <em>¡Pasa los minutos a horas!</em></li>
+                                <li><strong>Carga Total:</strong> N° Clientes × Tiempo de Visita × Frecuencia Anual = Total Horas.</li>
+                                <li><strong>Tiempo del Vendedor:</strong> Horas anuales totales menos el tiempo de viajes y reportes = Horas reales de venta.</li>
+                                <li><strong>Cálculo Final:</strong> Dividir la <em>Carga Total</em> entre el <em>Tiempo real del vendedor</em>. Redondear siempre hacia arriba.</li>
+                            </ol>
+                        </div>
+                        <p class="font-medium mt-4 text-center">¡Ve a la sección "Entrenamiento" para usar el simulador interactivo!</p>
+                    </div>
+                `
+            },
+            5: {
+                title: "5. Logística y Distribución (GSCM)",
+                content: `
+                    <div class="space-y-4">
+                        <p>El canal otorga utilidad de <strong>tiempo, lugar y posesión</strong>.</p>
+
+                        <h3 class="text-xl font-bold text-indigo-700 mt-4">Funciones del Canal</h3>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li><strong>Transaccionales:</strong> Comprar, vender, asumir riesgos.</li>
+                            <li><strong>Logísticas:</strong> Almacenar, fraccionar, transportar.</li>
+                            <li><strong>Facilitadoras:</strong> Financiamiento, estudio de mercado, soporte.</li>
+                        </ul>
+
+                        <h3 class="text-xl font-bold text-indigo-700 mt-6">Estrategias de la Cadena (GSCM)</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2">
+                            <div class="bg-white border border-gray-200 p-4 rounded-lg shadow-sm">
+                                <span class="font-bold text-indigo-600 block mb-2">Lean (Ajustada)</span>
+                                Minimiza costos y desperdicios. Inventarios "Just In Time".
+                            </div>
+                            <div class="bg-white border border-gray-200 p-4 rounded-lg shadow-sm">
+                                <span class="font-bold text-indigo-600 block mb-2">Ágil</span>
+                                Velocidad y flexibilidad extrema ante cambios de demanda.
+                            </div>
+                            <div class="bg-white border border-gray-200 p-4 rounded-lg shadow-sm">
+                                <span class="font-bold text-indigo-600 block mb-2">Híbrida</span>
+                                Base Lean para demanda estable + Ágil para picos de ventas.
+                            </div>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-indigo-700 mt-6">Tecnología</h3>
+                        <p>Uso de <strong>Blockchain</strong> para asegurar la trazabilidad y <strong>IA</strong> para predecir rutas y demandas, cumpliendo normas de sostenibilidad.</p>
+                    </div>
+                `
+            }
+        };
+
+        const quizData = [
+            {
+                q: "1. Si una marca vende su producto en el extranjero a un precio inferior a su costo de producción para ganar mercado rápido, está haciendo:",
+                options: ["Fijación Diferencial", "Estrategia Lean", "Dumping", "Carga de Trabajo"],
+                ans: 2
+            },
+            {
+                q: "2. En una cultura de 'Bajo Contexto' (como Estados Unidos o Alemania), los mensajes de marketing deben ser:",
+                options: ["Directos, explícitos y orientados a beneficios", "Llenos de simbolismo y mensajes suaves", "Estrictamente traducidos sin adaptar", "Enfocados en construir relaciones a largo plazo"],
+                ans: 0
+            },
+            {
+                q: "3. La estrategia de Cadena de Suministro que se enfoca en eliminar desperdicios, minimizar costos e inventarios (Just In Time) es:",
+                options: ["Estrategia Ágil", "Estrategia Híbrida", "Estrategia de Fraccionamiento", "Estrategia Lean"],
+                ans: 3
+            },
+            {
+                q: "4. En el Método de Carga de Trabajo, ¿qué se debe hacer en el Paso 4?",
+                options: ["Dividir a los clientes en categorías", "Calcular el tiempo REAL disponible del vendedor restando viajes y reuniones", "Definir si los precios son uniformes o diferenciales", "Multiplicar todo por 48 semanas"],
+                ans: 1
+            }
+        ];
+
+        // --- NAVIGATION LOGIC ---
+        function switchMainTab(tab) {
+            document.getElementById('section-courses').classList.add('hidden');
+            document.getElementById('section-training').classList.add('hidden');
+            document.getElementById('btn-courses').classList.replace('bg-indigo-700', 'bg-transparent');
+            document.getElementById('btn-training').classList.replace('bg-indigo-700', 'bg-transparent');
+            
+            if (tab === 'courses') {
+                document.getElementById('section-courses').classList.remove('hidden');
+                document.getElementById('btn-courses').classList.add('bg-indigo-700');
+            } else {
+                document.getElementById('section-training').classList.remove('hidden');
+                document.getElementById('section-training').classList.add('flex');
+                document.getElementById('btn-training').classList.add('bg-indigo-700');
+            }
+        }
+
+        function switchTrainTab(subtab) {
+            document.getElementById('area-quiz').classList.add('hidden');
+            document.getElementById('area-calc').classList.add('hidden');
+            
+            // Reset styles
+            document.getElementById('btn-quiz').className = "px-6 py-2 rounded-lg text-gray-600 hover:bg-gray-200 font-medium transition";
+            document.getElementById('btn-calc').className = "px-6 py-2 rounded-lg text-gray-600 hover:bg-gray-200 font-medium transition";
+
+            if (subtab === 'quiz') {
+                document.getElementById('area-quiz').classList.remove('hidden');
+                document.getElementById('btn-quiz').className = "px-6 py-2 rounded-lg bg-indigo-100 text-indigo-700 font-semibold shadow-sm transition";
+            } else {
+                document.getElementById('area-calc').classList.remove('hidden');
+                document.getElementById('btn-calc').className = "px-6 py-2 rounded-lg bg-indigo-100 text-indigo-700 font-semibold shadow-sm transition";
+            }
+        }
+
+        function loadModule(id) {
+            // Update tabs
+            for (let i = 1; i <= 5; i++) {
+                let el = document.getElementById('tab-mod-' + i);
+                if (i === id) {
+                    el.className = "text-left px-4 py-3 tab-active transition";
+                } else {
+                    el.className = "text-left px-4 py-3 tab-inactive transition";
+                }
+            }
+            // Update content
+            const contentDiv = document.getElementById('course-content');
+            contentDiv.innerHTML = `<h2 class="text-3xl font-bold mb-6 text-gray-900">${modules[id].title}</h2>` + modules[id].content;
+        }
+
+        // --- QUIZ LOGIC ---
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            let html = '';
+            quizData.forEach((q, qIndex) => {
+                html += `<div class="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
+                            <p class="font-semibold text-lg text-gray-800 mb-3">${q.q}</p>
+                            <div class="space-y-2">`;
+                q.options.forEach((opt, oIndex) => {
+                    html += `<label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-gray-50">
+                                <input type="radio" name="q${qIndex}" value="${oIndex}" class="form-radio h-5 w-5 text-indigo-600">
+                                <span class="text-gray-700">${opt}</span>
+                             </label>`;
+                });
+                html += `   </div>
+                         </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function checkAnswers() {
+            let score = 0;
+            quizData.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                if (selected && parseInt(selected.value) === q.ans) {
+                    score++;
+                }
+            });
+            showMsg("Resultados del Test", `Has obtenido ${score} de ${quizData.length} respuestas correctas.<br><br> ${score === quizData.length ? '¡Excelente! Estás listo para el examen.' : 'Sigue repasando los módulos.'}`);
+        }
+
+        // --- CALCULATOR LOGIC ---
+        function calcularCargaTrabajo() {
+            try {
+                // 1. Horas Vendedor
+                const horasTotales = parseFloat(document.getElementById('calc-horas-año').value);
+                const porcNoVenta = parseFloat(document.getElementById('calc-porcentaje-noventa').value) / 100;
+                const porcVenta = 1 - porcNoVenta;
+                const horasVendedor = horasTotales * porcVenta;
+
+                // 2. Carga Clientes
+                const aCant = parseFloat(document.getElementById('cli-a-cant').value);
+                const aFrec = parseFloat(document.getElementById('cli-a-frec').value);
+                const aDur = parseFloat(document.getElementById('cli-a-dur').value);
+                const cargaA = aCant * aFrec * aDur;
+
+                const bCant = parseFloat(document.getElementById('cli-b-cant').value);
+                const bFrec = parseFloat(document.getElementById('cli-b-frec').value);
+                const bDur = parseFloat(document.getElementById('cli-b-dur').value);
+                const cargaB = bCant * bFrec * bDur;
+
+                const cCant = parseFloat(document.getElementById('cli-c-cant').value);
+                const cFrec = parseFloat(document.getElementById('cli-c-frec').value);
+                const cDur = parseFloat(document.getElementById('cli-c-dur').value);
+                const cargaC = cCant * cFrec * cDur;
+
+                const cargaTotal = cargaA + cargaB + cargaC;
+
+                // 3. Resultado
+                const vendedores = Math.ceil(cargaTotal / horasVendedor);
+
+                document.getElementById('res-horas-vendedor').innerText = horasVendedor.toFixed(1);
+                document.getElementById('res-carga-total').innerText = cargaTotal.toFixed(1);
+                document.getElementById('res-vendedores').innerText = vendedores;
+
+                document.getElementById('calc-results').classList.remove('hidden');
+
+            } catch (e) {
+                showMsg("Error", "Por favor, ingresa números válidos en todos los campos.");
+            }
+        }
+
+        // --- CUSTOM MODAL (NO ALERT) ---
+        function showMsg(title, text) {
+            document.getElementById('msg-title').innerText = title;
+            document.getElementById('msg-text').innerHTML = text;
+            const box = document.getElementById('message-box');
+            const content = document.getElementById('message-box-content');
+            box.classList.remove('hidden');
+            setTimeout(() => { content.classList.remove('scale-95'); content.classList.add('scale-100'); }, 10);
+        }
+
+        function closeMessageBox() {
+            const box = document.getElementById('message-box');
+            const content = document.getElementById('message-box-content');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => { box.classList.add('hidden'); }, 150);
+        }
+
+        // Initialize
+        window.onload = function() {
+            loadModule(1);
+            renderQuiz();
+        };
+    </script>
+</body>
+</html>
